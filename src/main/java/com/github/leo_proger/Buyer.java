@@ -2,6 +2,7 @@ package com.github.leo_proger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static com.github.leo_proger.Main.*;
@@ -14,33 +15,66 @@ public class Buyer {
     private final int refreshLotsFrequency = 10; // В секундах
     private final int delayAfterRefresh = 300; // В миллисекундах. Нужно, чтобы избежать ложных срабатываний. Увеличьте значение, если у вас плохой интернет
 
-    private final ReentrantLock lock = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
 
     public void run() throws InterruptedException {
         Thread refreshThread = new Thread(this::refreshLots);
         refreshThread.setDaemon(true);
         refreshThread.start();
 
+        Thread[] workerThreads = new Thread[2];
+        for (int i = 0; i < workerThreads.length; i++) {
+            final int threadIndex = i;
+            workerThreads[i] = new Thread(() -> checkLots(threadIndex));
+            workerThreads[i].start();
+        }
+
+        for (Thread workerThread : workerThreads) {
+            workerThread.join();
+        }
+    }
+
+    private void checkLots(int threadIndex) {
+        int startLot = threadIndex * 4;
+        int endLot = startLot + 4;
+
         while (isRunning) {
-            lock.lock();
+            if (lock.tryLock()) {
+
+                try {
+                    for (int i = startLot; i < endLot; i++) {
+                        if (!isRunning) break;
+
+                        BufferedImage image = ScreenManager.takeScreenshot(
+                                xStart - 19,
+                                yStart + lotHeight / 2 - 19 + lotHeight * i,
+                                width,
+                                height
+                        );
+                        if (isThereSticker(image, 30)) {
+
+                            try {
+                                buyLot(new Point(1400, yStart + lotHeight / 2 + lotHeight * i), confirmPurchaseButton);
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
+                                System.out.println("ОШИБКА: Прерывание во время покупки лота");
+                            }
+                            System.out.println("Куплено!");
+                            isRunning = false;
+                            break;
+                        }
+                    }
+                } finally {
+                    lock.unlock();
+                }
+            }
 
             try {
-                BufferedImage image = ScreenManager.takeScreenshot(
-                        xStart - 19,
-                        yStart + lotHeight / 2 - 19 + lotHeight * 0,
-                        width,
-                        height
-                );
-                if (isThereSticker(image, 30)) {
-                    buyLot(buyButton, confirmPurchaseButton);
-                    System.out.println("Куплено!");
-                    isRunning = false;
-                    break;
-                }
-            } finally {
-                lock.unlock();
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println("ОШИБКА: Прерывание во время ожидания");
             }
-            Thread.sleep(10);
         }
     }
 
@@ -59,17 +93,20 @@ public class Buyer {
             try {
                 Thread.sleep(refreshLotsFrequency * 1000);
             } catch (InterruptedException e) {
-                System.out.println("ОШИБКА: Не могу приостановиться во время обновления слотов");
+                Thread.currentThread().interrupt();
+                System.out.println("ОШИБКА: Прерывание во время обновления слотов");
                 break;
             }
 
             lock.lock();
+
             try {
                 RobotManager.click(refreshButton.x, refreshButton.y);
                 RobotManager.click(refreshButton.x, refreshButton.y);
                 Thread.sleep(delayAfterRefresh);
             } catch (InterruptedException e) {
-                System.out.println("ОШИБКА: Не могу приостановиться во время обновления слотов");
+                Thread.currentThread().interrupt();
+                System.out.println("ОШИБКА: Прерывание во время обновления слотов");
                 break;
             } finally {
                 lock.unlock();
