@@ -102,6 +102,7 @@ public class Buyer {
 
             try {
                 RobotManager.click(refreshButton.x, refreshButton.y);
+                Thread.sleep(20);
                 RobotManager.click(refreshButton.x, refreshButton.y);
                 Thread.sleep(delayAfterRefresh);
             } catch (InterruptedException e) {
