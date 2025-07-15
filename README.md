@@ -1,0 +1,1 @@
+# Sticker bot for Standoff 2 Java version
