@@ -29,8 +29,8 @@ public class ScreenManager {
     }
 
     // Показывает изображение в новом окне
-    public static void showImage(BufferedImage image, String title) {
-        JFrame frame = new JFrame(title);
+    public static void showImage(BufferedImage image) {
+        JFrame frame = new JFrame();
         JLabel label = new JLabel(new ImageIcon(image));
         frame.add(label);
         frame.pack();
@@ -70,7 +70,7 @@ public class ScreenManager {
         }
 
         g.dispose();
-        showImage(result, "Яркие области (наклейки)");
+        showImage(result);
     }
 
     // Постоянно обновляющееся окно с областью экрана
