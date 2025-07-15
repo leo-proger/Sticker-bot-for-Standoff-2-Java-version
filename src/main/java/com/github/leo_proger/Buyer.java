@@ -14,8 +14,15 @@ public class Buyer {
     private final Point refreshButton = new Point(760, 280); // Кнопка для обновления лотов (чтобы купленные пропали)
     private final int refreshLotsFrequency = 10; // В секундах
     private final int delayAfterRefresh = 300; // В миллисекундах. Нужно, чтобы избежать ложных срабатываний. Увеличьте значение, если у вас плохой интернет
+    private final int threshold = 700; // Если есть ложные срабатывания, увеличьте значение
 
     private final Lock lock = new ReentrantLock();
+
+    private final StickerDetector stickerDetector;
+
+    public Buyer(StickerDetector stickerDetector) {
+        this.stickerDetector = stickerDetector;
+    }
 
     public void run() throws InterruptedException {
         Thread refreshThread = new Thread(this::refreshLots);
@@ -51,7 +58,7 @@ public class Buyer {
                                 width,
                                 height
                         );
-                        if (isThereSticker(image, 30)) {
+                        if (stickerDetector.hasSticker(image, threshold)) {
 
                             try {
                                 buyLot(new Point(1400, yStart + lotHeight / 2 + lotHeight * i), confirmPurchaseButton);
@@ -76,10 +83,6 @@ public class Buyer {
                 System.out.println("ОШИБКА: Прерывание во время ожидания");
             }
         }
-    }
-
-    private boolean isThereSticker(BufferedImage image, int brightnessThreshold) {
-        return StickerDetector.hasSticker(image, brightnessThreshold);
     }
 
     private void buyLot(Point buyButton, Point confirmPurchaseButton) throws InterruptedException {
