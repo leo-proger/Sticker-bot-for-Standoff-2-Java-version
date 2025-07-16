@@ -6,9 +6,14 @@ import java.awt.image.BufferedImage;
 public class ColorDetection implements StickerDetector {
 
     private final Color baseGray = new Color(44, 49, 72);
+    private final int threshold;
+
+    public ColorDetection(int threshold) {
+        this.threshold = threshold;
+    }
 
     @Override
-    public boolean hasSticker(BufferedImage image, int threshold) {
+    public boolean hasSticker(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
         int nonGrayCount = 0;
@@ -24,13 +29,12 @@ public class ColorDetection implements StickerDetector {
                 if (!isGray(red, green, blue, baseGray)) {
                     nonGrayCount++;
 
-//                    if (nonGrayCount > threshold) {
-//                        return true;
-//                    }
+                    if (nonGrayCount > threshold) {
+                        return true;
+                    }
                 }
             }
         }
-        System.out.println(nonGrayCount);
         return false;
     }
 

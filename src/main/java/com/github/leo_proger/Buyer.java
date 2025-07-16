@@ -14,7 +14,6 @@ public class Buyer {
     private final Point refreshButton = new Point(760, 280); // Кнопка для обновления лотов (чтобы купленные пропали)
     private final int refreshLotsFrequency = 10; // В секундах
     private final int delayAfterRefresh = 300; // В миллисекундах. Нужно, чтобы избежать ложных срабатываний. Увеличьте значение, если у вас плохой интернет
-    private final int threshold = 700; // Если есть ложные срабатывания, увеличьте значение
 
     private final Lock lock = new ReentrantLock();
 
@@ -59,7 +58,7 @@ public class Buyer {
                                 width,
                                 height
                         );
-                        if (stickerDetector.hasSticker(image, threshold)) {
+                        if (stickerDetector.hasSticker(image)) {
 
                             try {
                                 buyLot(new Point(buyButtonX, stickerCenterPositionY), confirmPurchaseButton);

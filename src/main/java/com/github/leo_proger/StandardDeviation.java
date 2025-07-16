@@ -12,7 +12,12 @@ public class StandardDeviation implements StickerDetector {
     private final int[][] baseImageColorGreen;
     private final int[][] baseImageColorBlue;
 
-    public StandardDeviation() {
+    private final int threshold;
+
+
+    public StandardDeviation(int threshold) {
+        this.threshold = threshold;
+
         BufferedImage baseImage = getBaseImage();
         int width = baseImage.getWidth();
         int height = baseImage.getHeight();
@@ -53,7 +58,7 @@ public class StandardDeviation implements StickerDetector {
     }
 
     @Override
-    public boolean hasSticker(BufferedImage image, int threshold) {
+    public boolean hasSticker(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
 

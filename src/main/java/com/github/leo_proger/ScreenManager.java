@@ -28,6 +28,11 @@ public class ScreenManager {
         return RobotManager.screenshot(x, y, width, height);
     }
 
+    // TODO: Реализовать, в конце показать окно, какое изображение было сделано
+    public static void takeTemplateImage(int lotNumber) {
+//        return RobotManager.screenshot(x, y, width, height);
+    }
+
     // Показывает изображение в новом окне
     public static void showImage(BufferedImage image) {
         JFrame frame = new JFrame();
