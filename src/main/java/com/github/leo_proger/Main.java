@@ -14,7 +14,7 @@ public class Main {
 
     static int lotHeight = 80;
 
-    static Point buyButton = new Point(1400, 350);
+    static int buyButtonX = 1400;
     static Point confirmPurchaseButton = new Point(950, 650);
 
     public static void main(String[] args) throws InterruptedException {

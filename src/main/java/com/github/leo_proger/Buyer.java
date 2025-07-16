@@ -62,7 +62,7 @@ public class Buyer {
                         if (stickerDetector.hasSticker(image, threshold)) {
 
                             try {
-                                buyLot(new Point(1400, stickerCenterPositionY), confirmPurchaseButton);
+                                buyLot(new Point(buyButtonX, stickerCenterPositionY), confirmPurchaseButton);
                             } catch (InterruptedException e) {
                                 Thread.currentThread().interrupt();
                                 System.out.println("ОШИБКА: Прерывание во время покупки лота");
