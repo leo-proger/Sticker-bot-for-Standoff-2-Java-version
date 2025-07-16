@@ -18,9 +18,22 @@ public class Buyer {
     private final Lock lock = new ReentrantLock();
 
     private final StickerDetector stickerDetector;
+    private final int shift;
 
-    public Buyer(StickerDetector stickerDetector) {
+    public Buyer(StickerDetector stickerDetector, int stickerCount) {
         this.stickerDetector = stickerDetector;
+
+        if (stickerCount == 1) {
+            shift = 19;
+        } else if (stickerCount == 2) {
+            shift = 53;
+        } else if (stickerCount == 3) {
+            shift = 88;
+        } else if (stickerCount == 4) {
+            shift = 122;
+        } else {
+            throw new IllegalArgumentException("ОШИБКА: Количество наклеек должно быть от 1 до 4");
+        }
     }
 
     public void run() throws InterruptedException {
@@ -53,7 +66,7 @@ public class Buyer {
 
                         int stickerCenterPositionY = yStart + lotHeight / 2 + lotHeight * i;
                         BufferedImage image = ScreenManager.takeScreenshot(
-                                xStart - 19,
+                                xStart - shift,
                                 stickerCenterPositionY - 19,
                                 width,
                                 height
