@@ -52,16 +52,17 @@ public class Buyer {
                     for (int i = startLot; i < endLot; i++) {
                         if (!isRunning) break;
 
+                        int stickerCenterPositionY = yStart + lotHeight / 2 + lotHeight * i;
                         BufferedImage image = ScreenManager.takeScreenshot(
                                 xStart - 19,
-                                yStart + lotHeight / 2 - 19 + lotHeight * i,
+                                stickerCenterPositionY - 19,
                                 width,
                                 height
                         );
                         if (stickerDetector.hasSticker(image, threshold)) {
 
                             try {
-                                buyLot(new Point(1400, yStart + lotHeight / 2 + lotHeight * i), confirmPurchaseButton);
+                                buyLot(new Point(1400, stickerCenterPositionY), confirmPurchaseButton);
                             } catch (InterruptedException e) {
                                 Thread.currentThread().interrupt();
                                 System.out.println("ОШИБКА: Прерывание во время покупки лота");
