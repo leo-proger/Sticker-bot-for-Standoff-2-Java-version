@@ -13,6 +13,7 @@ public class StandardDeviation implements StickerDetector {
     private final int[][] baseImageColorBlue;
 
     private final int threshold;
+    private boolean debug = false;
 
 
     public StandardDeviation(int threshold) {
@@ -27,6 +28,11 @@ public class StandardDeviation implements StickerDetector {
         baseImageColorBlue = new int[height][width];
 
         getBaseImageProperties(baseImage);
+    }
+
+    public StandardDeviation(int threshold, boolean debug) {
+        this(threshold);
+        this.debug = debug;
     }
 
     private BufferedImage getBaseImage() {
@@ -77,6 +83,10 @@ public class StandardDeviation implements StickerDetector {
         }
 
         double mse = totalMSE / (width * height * 3);
+
+        if (debug) {
+            System.out.println(((int) mse));
+        }
         return mse > threshold;
     }
 }

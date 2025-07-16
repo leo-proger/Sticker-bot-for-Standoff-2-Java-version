@@ -7,9 +7,15 @@ public class ColorDetection implements StickerDetector {
 
     private final Color baseGray = new Color(44, 49, 72);
     private final int threshold;
+    private boolean debug = false;
 
     public ColorDetection(int threshold) {
         this.threshold = threshold;
+    }
+
+    public ColorDetection(int threshold, boolean debug) {
+        this(threshold);
+        this.debug = debug;
     }
 
     @Override
@@ -29,19 +35,20 @@ public class ColorDetection implements StickerDetector {
                 if (!isGray(red, green, blue, baseGray)) {
                     nonGrayCount++;
 
-                    if (nonGrayCount > threshold) {
+                    if (nonGrayCount > threshold && !debug) {
                         return true;
                     }
                 }
             }
         }
+        if (debug) System.out.println(nonGrayCount);
         return false;
     }
 
     private boolean isGray(int red, int green, int blue, Color baseGray) {
         int tolerance = 100; // Погрешность для оттенков серого
         return Math.abs(red - baseGray.getRed()) < tolerance &&
-               Math.abs(green - baseGray.getGreen()) < tolerance &&
-               Math.abs(blue - baseGray.getBlue()) < tolerance;
+                Math.abs(green - baseGray.getGreen()) < tolerance &&
+                Math.abs(blue - baseGray.getBlue()) < tolerance;
     }
 }
