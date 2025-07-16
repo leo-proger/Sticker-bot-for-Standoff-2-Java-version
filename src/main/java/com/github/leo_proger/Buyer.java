@@ -87,7 +87,7 @@ public class Buyer {
 
     private void buyLot(Point buyButton, Point confirmPurchaseButton) throws InterruptedException {
         RobotManager.click(buyButton.x, buyButton.y);
-        Thread.sleep(300);
+        Thread.sleep(180);
         RobotManager.click(confirmPurchaseButton.x, confirmPurchaseButton.y);
     }
 
