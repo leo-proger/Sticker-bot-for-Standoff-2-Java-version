@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static com.github.leo_proger.Main.*;
+import static com.github.leo_proger.config.Config.*;
 
 public class Buyer {
 

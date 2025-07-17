@@ -1,20 +1,10 @@
 package com.github.leo_proger;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static com.github.leo_proger.config.Config.*;
+
 public class Main {
-    static int xStart = 1190;
-    static int yStart = 310;
-
-    static int width = 38;
-    static int height = 38;
-
-    static int lotHeight = 80;
-
-    static int buyButtonX = 1400;
-    static Point confirmPurchaseButton = new Point(950, 650);
-
     public static void main(String[] args) throws InterruptedException {
 //        System.out.println(getCursorPosition());
 //        System.exit(1);

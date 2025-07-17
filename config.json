@@ -1,0 +1,12 @@
+{
+  "x_start": 1190,
+  "y_start": 310,
+  "width": 38,
+  "height": 38,
+  "lot_height": 80,
+  "buy_button_x": 1400,
+  "confirm_purchase_button": {
+    "x": 950,
+    "y": 650
+  }
+}
