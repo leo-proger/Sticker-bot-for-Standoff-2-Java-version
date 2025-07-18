@@ -43,41 +43,6 @@ public class ScreenManager {
         frame.setVisible(true);
     }
 
-    // Показывает яркие области (потенциальные наклейки)
-    public static void showBrightRegions(BufferedImage image, int brightnessThreshold) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        // Вычисляем средний фон
-        long totalBrightness = 0;
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                totalBrightness += getBrightness(image.getRGB(x, y));
-            }
-        }
-        int avgBrightness = (int) (totalBrightness / (width * height));
-
-        // Создаем изображение с выделенными областями
-        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = result.createGraphics();
-        g.drawImage(image, 0, 0, null);
-
-        // Выделяем яркие области зеленым
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                int brightness = getBrightness(image.getRGB(x, y));
-
-                if (brightness > avgBrightness + brightnessThreshold) {
-                    // Зеленый цвет для ярких областей
-                    result.setRGB(x, y, 0x00FF00);
-                }
-            }
-        }
-
-        g.dispose();
-        showImage(result);
-    }
-
     // Постоянно обновляющееся окно с областью экрана
     public static void startLiveView(int x, int y, int width, int height) {
         JFrame frame = new JFrame("Live View");
@@ -93,12 +58,5 @@ public class ScreenManager {
             label.setIcon(new ImageIcon(screenshot));
         });
         timer.start();
-    }
-
-    private static int getBrightness(int rgb) {
-        int r = (rgb >> 16) & 0xFF;
-        int g = (rgb >> 8) & 0xFF;
-        int b = rgb & 0xFF;
-        return (r + g + b) / 3;
     }
 }
