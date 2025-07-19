@@ -9,28 +9,37 @@ import static com.github.leo_proger.config.Config.*;
 
 public class Buyer {
 
-    private volatile boolean isRunning = true;
-
     private final Point refreshButton = new Point(760, 280); // Кнопка для обновления лотов (чтобы купленные пропали)
     private final int refreshLotsFrequency = 10; // В секундах
     private final int delayAfterRefresh = 300; // В миллисекундах. Нужно, чтобы избежать ложных срабатываний. Увеличьте значение, если у вас плохой интернет
 
+    private volatile boolean isRunning = true; // Для многопоточности
     private final Lock lock = new ReentrantLock();
 
-    private final StickerDetector stickerDetector;
-    private final int shift;
+    private final StickerDetector stickerDetector; // Механизм обнаружения наклеек
+
+    private final double xMultiplier; // Коэффициент, отвечающий за нахождение наклеек по X
+
+    private final double yMultiplier = 0.3; // Коэффициент, отвечающий за нахождение наклеек по Y
+    private final double lotIndent = 5; // Отступ между лотами в пикселях
+
+    private final int lotWidth = x2 - x1; // Ширина лота в пикселях
+    private final int lotHeight = y2 - y1; // Высота лота в пикселях
+    private final int stickerWidth = 19; // Ширина наклейки в пикселях
+    private final int stickerHeight = 19; // Высота наклейки в пикселях
+
 
     public Buyer(StickerDetector stickerDetector, int stickerCount) {
         this.stickerDetector = stickerDetector;
 
         if (stickerCount == 1) {
-            shift = 19;
+            xMultiplier = 0.505;
         } else if (stickerCount == 2) {
-            shift = 53;
+            xMultiplier = 0;
         } else if (stickerCount == 3) {
-            shift = 88;
+            xMultiplier = 0;
         } else if (stickerCount == 4) {
-            shift = 122;
+            xMultiplier = 0;
         } else {
             throw new IllegalArgumentException("ОШИБКА: Количество наклеек должно быть от 1 до 4");
         }
@@ -61,20 +70,20 @@ public class Buyer {
             if (lock.tryLock()) {
 
                 try {
-                    for (int i = startLot; i < endLot; i++) {
+                    for (int lotNumber = startLot; lotNumber < endLot; lotNumber++) {
                         if (!isRunning) break;
 
-                        int stickerCenterPositionY = yStart + lotHeight / 2 + lotHeight * i;
                         BufferedImage image = ScreenManager.takeScreenshot(
-                                xStart - shift,
-                                stickerCenterPositionY - 19,
-                                width,
-                                height
+                                (int) Math.round(x1 + lotWidth * xMultiplier),
+                                (int) Math.round(y1 + lotHeight * yMultiplier + lotHeight * lotNumber + lotIndent * lotNumber),
+                                stickerWidth,
+                                stickerHeight
                         );
                         if (stickerDetector.hasSticker(image)) {
 
                             try {
-                                buyLot(new Point(buyButtonX, stickerCenterPositionY), confirmPurchaseButton);
+                                int stickerPositionY = (int) Math.round(y1 + (double) lotHeight / 2 + lotHeight * lotNumber + lotIndent * lotNumber);
+                                buyLot(new Point(buyButtonX, stickerPositionY), confirmPurchaseButton);
                             } catch (InterruptedException e) {
                                 Thread.currentThread().interrupt();
                                 System.out.println("ОШИБКА: Прерывание во время покупки лота");

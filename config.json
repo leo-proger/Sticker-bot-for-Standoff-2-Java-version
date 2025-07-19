@@ -1,12 +1,11 @@
 {
-  "x_start": 1190,
-  "y_start": 310,
-  "width": 38,
-  "height": 38,
-  "lot_height": 80,
-  "buy_button_x": 1400,
-  "confirm_purchase_button": {
-    "x": 950,
-    "y": 650
+  "x1" : 123,
+  "y1" : 123,
+  "x2" : 123,
+  "y2" : 132,
+  "buyButtonX" : 1257,
+  "confirmPurchaseButton" : {
+    "x" : 853.0,
+    "y" : 583.0
   }
 }

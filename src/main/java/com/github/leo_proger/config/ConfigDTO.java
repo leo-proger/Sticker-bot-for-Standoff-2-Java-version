@@ -4,70 +4,72 @@ package com.github.leo_proger.config;
 import java.awt.*;
 
 public class ConfigDTO {
-    private int xStart;
-    private int yStart;
+    private int x1;
+    private int y1;
 
-    private int width;
-    private int height;
-
-    private int lotHeight;
+    private int x2;
+    private int y2;
 
     private int buyButtonX;
     private Point confirmPurchaseButton;
 
-    public int getX_start() {
-        return xStart;
+    public ConfigDTO() {
     }
 
-    public void setX_start(int x_start) {
-        this.xStart = x_start;
+    public ConfigDTO(int x1, int y1, int x2, int y2, int buyButtonX, Point confirmPurchaseButton) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.buyButtonX = buyButtonX;
+        this.confirmPurchaseButton = confirmPurchaseButton;
     }
 
-    public int getY_start() {
-        return yStart;
+    public int getX1() {
+        return x1;
     }
 
-    public void setY_start(int y_start) {
-        this.yStart = y_start;
+    public void setX1(int x1) {
+        this.x1 = x1;
     }
 
-    public int getWidth() {
-        return width;
+    public int getY1() {
+        return y1;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
+    public void setY1(int y1) {
+        this.y1 = y1;
     }
 
-    public int getHeight() {
-        return height;
+    public int getX2() {
+        return x2;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public void setX2(int x2) {
+        this.x2 = x2;
     }
 
-    public int getLot_height() {
-        return lotHeight;
+    public int getY2() {
+        return y2;
     }
 
-    public void setLot_height(int lot_height) {
-        this.lotHeight = lot_height;
+    public void setY2(int y2) {
+        this.y2 = y2;
     }
 
-    public int getBuy_button_x() {
+    public int getBuyButtonX() {
         return buyButtonX;
     }
 
-    public void setBuy_button_x(int buy_button_x) {
-        this.buyButtonX = buy_button_x;
+    public void setBuyButtonX(int buyButtonX) {
+        this.buyButtonX = buyButtonX;
     }
 
-    public Point getConfirm_purchase_button() {
+    public Point getConfirmPurchaseButton() {
         return confirmPurchaseButton;
     }
 
-    public void setConfirm_purchase_button(Point confirm_purchase_button) {
-        this.confirmPurchaseButton = confirm_purchase_button;
+    public void setConfirmPurchaseButton(Point confirmPurchaseButton) {
+        this.confirmPurchaseButton = confirmPurchaseButton;
     }
 }

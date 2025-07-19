@@ -1,47 +1,66 @@
 package com.github.leo_proger.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Config {
-    public static final int xStart;
-    public static final int yStart;
+    public static int x1; // Координата левого верхнего угла лота по X
+    public static int y1; // Координата левого верхнего угла лота по Y
 
-    public static final int width;
-    public static final int height;
+    public static int x2; // Координата правого нижнего угла лота по X
+    public static int y2; // Координата правого нижнего угла лота по Y
 
-    public static final int lotHeight;
+    public static int buyButtonX; // Координаты кнопки покупки лота по X
+    public static Point confirmPurchaseButton; // Координаты кнопки подтверждения покупки (полные координаты, выраженные классом Point)
 
-    public static final int buyButtonX;
-    public static final Point confirmPurchaseButton;
+//    static {
+//        try {
+//            ConfigDTO dto = loadDataFromJson();
+//
+//            x1 = dto.getX1();
+//            y1 = dto.getY1();
+//
+//            x2 = dto.getX2();
+//            y2 = dto.getY2();
+//
+//            buyButtonX = dto.getBuyButtonX();
+//            confirmPurchaseButton = dto.getConfirmPurchaseButton();
+//        } catch (IOException e) {
+//            throw new RuntimeException("ОШИБКА: Не удалось загрузить config.json", e);
+//        }
+//    }
 
-    static {
-        try {
-            ConfigDTO dto = loadDataFromJson();
-
-            xStart = dto.getX_start();
-            yStart = dto.getY_start();
-
-            width = dto.getWidth();
-            height = dto.getHeight();
-
-            lotHeight = dto.getLot_height();
-
-            buyButtonX = dto.getBuy_button_x();
-            confirmPurchaseButton = dto.getConfirm_purchase_button();
-        } catch (IOException e) {
-            throw new RuntimeException("ОШИБКА: Не удалось загрузить config.json", e);
-        }
+    public static Path getConfigPath() {
+        return Path.of(System.getProperty("user.dir"), "config.json");
     }
 
     public static ConfigDTO loadDataFromJson() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        Path json = Path.of(System.getProperty("user.dir"), "config.json");
+        Path json = getConfigPath();
+        if (!Files.exists(json)) {
+            throw new FileNotFoundException("ОШИБКА: Файл с настройками не найден. Попробуйте откалибровать координаты");
+        }
 
         return mapper.readValue(json.toFile(), ConfigDTO.class);
+    }
+
+    public static void saveDataToJson(ConfigDTO configDTO) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+
+            File json = getConfigPath().toFile();
+            objectWriter.writeValue(json, configDTO);
+        } catch (IOException e) {
+            throw new RuntimeException("ОШИБКА: Не удалось сохранить данные", e);
+        }
     }
 }
