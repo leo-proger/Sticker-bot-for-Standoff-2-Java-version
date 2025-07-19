@@ -19,23 +19,37 @@ public class Config {
 
     public static int buyButtonX; // Координаты кнопки покупки лота по X
     public static Point confirmPurchaseButton; // Координаты кнопки подтверждения покупки (полные координаты, выраженные классом Point)
+    public static Point refreshButton; // Кнопка для обновления лотов (чтобы купленные пропали)
 
-//    static {
-//        try {
-//            ConfigDTO dto = loadDataFromJson();
-//
-//            x1 = dto.getX1();
-//            y1 = dto.getY1();
-//
-//            x2 = dto.getX2();
-//            y2 = dto.getY2();
-//
-//            buyButtonX = dto.getBuyButtonX();
-//            confirmPurchaseButton = dto.getConfirmPurchaseButton();
-//        } catch (IOException e) {
-//            throw new RuntimeException("ОШИБКА: Не удалось загрузить config.json", e);
-//        }
-//    }
+    public static int refreshLotsFrequency; // Частота обновления лотов в секундах
+    public static int delayAfterRefresh; // В миллисекундах. Нужно, чтобы избежать ложных срабатываний. Увеличьте значение, если у вас плохой интернет
+
+    public static int thresholdForColorDetection; // Порог для распознавания наклеек по цвету
+    public static int thresholdForStandardDeviation; // Порог для распознавания наклеек по среднеквадратичному отклонению
+
+    static {
+        try {
+            ConfigDTO dto = loadDataFromJson();
+
+            x1 = dto.getX1();
+            y1 = dto.getY1();
+
+            x2 = dto.getX2();
+            y2 = dto.getY2();
+
+            buyButtonX = dto.getBuyButtonX();
+            confirmPurchaseButton = dto.getConfirmPurchaseButton();
+            refreshButton = dto.getRefreshButton();
+
+            refreshLotsFrequency = dto.getRefreshLotsFrequency();
+            delayAfterRefresh = dto.getDelayAfterRefresh();
+
+            thresholdForColorDetection = dto.getThresholdForColorDetection();
+            thresholdForStandardDeviation = dto.getThresholdForStandardDeviation();
+        } catch (IOException e) {
+            throw new RuntimeException("ОШИБКА: Не удалось загрузить config.json", e);
+        }
+    }
 
     public static Path getConfigPath() {
         return Path.of(System.getProperty("user.dir"), "config.json");

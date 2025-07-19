@@ -1,11 +1,19 @@
 {
-  "x1" : 123,
-  "y1" : 123,
-  "x2" : 123,
-  "y2" : 132,
+  "x1" : 0,
+  "y1" : 0,
+  "x2" : 0,
+  "y2" : 0,
   "buyButtonX" : 1257,
   "confirmPurchaseButton" : {
     "x" : 853.0,
     "y" : 583.0
-  }
+  },
+  "refreshButton" : {
+    "x" : 760.0,
+    "y" : 280.0
+  },
+  "refreshLotsFrequency" : 10,
+  "delayAfterRefresh" : 300,
+  "thresholdForColorDetection" : 100,
+  "thresholdForStandardDeviation" : 700
 }

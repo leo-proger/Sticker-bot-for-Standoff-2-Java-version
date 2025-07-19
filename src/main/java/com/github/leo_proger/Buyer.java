@@ -9,15 +9,6 @@ import static com.github.leo_proger.config.Config.*;
 
 public class Buyer {
 
-    private final Point refreshButton = new Point(760, 280); // Кнопка для обновления лотов (чтобы купленные пропали)
-    private final int refreshLotsFrequency = 10; // В секундах
-    private final int delayAfterRefresh = 300; // В миллисекундах. Нужно, чтобы избежать ложных срабатываний. Увеличьте значение, если у вас плохой интернет
-
-    private volatile boolean isRunning = true; // Для многопоточности
-    private final Lock lock = new ReentrantLock();
-
-    private final StickerDetector stickerDetector; // Механизм обнаружения наклеек
-
     private final double xMultiplier; // Коэффициент, отвечающий за нахождение наклеек по X
 
     private final double yMultiplier = 0.3; // Коэффициент, отвечающий за нахождение наклеек по Y
@@ -28,6 +19,10 @@ public class Buyer {
     private final int stickerWidth = 19; // Ширина наклейки в пикселях
     private final int stickerHeight = 19; // Высота наклейки в пикселях
 
+    private volatile boolean isRunning = true; // Для многопоточности
+    private final Lock lock = new ReentrantLock();
+
+    private final StickerDetector stickerDetector; // Механизм обнаружения наклеек
 
     public Buyer(StickerDetector stickerDetector, int stickerCount) {
         this.stickerDetector = stickerDetector;
@@ -116,7 +111,7 @@ public class Buyer {
     private void refreshLots() {
         while (isRunning) {
             try {
-                Thread.sleep(refreshLotsFrequency * 1000);
+                Thread.sleep(refreshLotsFrequency * 1000L);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 System.out.println("ОШИБКА: Прерывание во время обновления слотов");

@@ -12,6 +12,13 @@ public class ConfigDTO {
 
     private int buyButtonX;
     private Point confirmPurchaseButton;
+    private Point refreshButton;
+
+    private int refreshLotsFrequency;
+    private int delayAfterRefresh;
+
+    private int thresholdForColorDetection;
+    private int thresholdForStandardDeviation;
 
     public ConfigDTO() {
     }
@@ -71,5 +78,45 @@ public class ConfigDTO {
 
     public void setConfirmPurchaseButton(Point confirmPurchaseButton) {
         this.confirmPurchaseButton = confirmPurchaseButton;
+    }
+
+    public Point getRefreshButton() {
+        return refreshButton;
+    }
+
+    public void setRefreshButton(Point refreshButton) {
+        this.refreshButton = refreshButton;
+    }
+
+    public int getRefreshLotsFrequency() {
+        return refreshLotsFrequency;
+    }
+
+    public void setRefreshLotsFrequency(int refreshLotsFrequency) {
+        this.refreshLotsFrequency = refreshLotsFrequency;
+    }
+
+    public int getDelayAfterRefresh() {
+        return delayAfterRefresh;
+    }
+
+    public void setDelayAfterRefresh(int delayAfterRefresh) {
+        this.delayAfterRefresh = delayAfterRefresh;
+    }
+
+    public int getThresholdForColorDetection() {
+        return thresholdForColorDetection;
+    }
+
+    public void setThresholdForColorDetection(int thresholdForColorDetection) {
+        this.thresholdForColorDetection = thresholdForColorDetection;
+    }
+
+    public int getThresholdForStandardDeviation() {
+        return thresholdForStandardDeviation;
+    }
+
+    public void setThresholdForStandardDeviation(int thresholdForStandardDeviation) {
+        this.thresholdForStandardDeviation = thresholdForStandardDeviation;
     }
 }

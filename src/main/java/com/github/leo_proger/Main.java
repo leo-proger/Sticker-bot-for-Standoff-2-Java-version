@@ -33,8 +33,8 @@ public class Main {
         );
 //        ScreenManager.showImage(s);
 
-//        StickerDetector stickerDetector = new ColorDetection(100);
-        StickerDetector stickerDetector = new StandardDeviation(700);
+//        StickerDetector stickerDetector = new ColorDetection(thresholdForColorDetection);
+//        StickerDetector stickerDetector = new StandardDeviation(thresholdForStandardDeviation);
 
         //        Buyer buyer = new Buyer(stickerDetector, 4);
 //        buyer.run();
