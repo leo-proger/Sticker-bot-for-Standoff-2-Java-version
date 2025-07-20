@@ -33,9 +33,9 @@ public class Buyer {
 		this.stickerDetector = stickerDetector;
 
 		if (stickerCount == 1) xMultiplier = 0.505;
-		else if (stickerCount == 2) xMultiplier = 0;
-		else if (stickerCount == 3) xMultiplier = 0;
-		else if (stickerCount == 4) xMultiplier = 0;
+		else if (stickerCount == 2) xMultiplier = 0.465;
+		else if (stickerCount == 3) xMultiplier = 0.423;
+		else if (stickerCount == 4) xMultiplier = 0.382;
 		else throw new IllegalArgumentException("ОШИБКА: Количество наклеек должно быть от 1 до 4");
 
 	}

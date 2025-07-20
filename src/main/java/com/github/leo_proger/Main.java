@@ -62,9 +62,9 @@ public class Main {
 		int x1 = 2667, y1 = 312;
 		int x2 = 3512, y2 = 386;
 
+		int lotNumber = 2;
 		int lotHeight = y2 - y1;
 		int lotWidth = x2 - x1;
-		int lotNumber = 2;
 		int lotIndent = getLotIndent(lotHeight, 0.08);
 
 		int stickerWidthAndHeight = getStickerWidthAndHeight(lotHeight, 0.43);
@@ -76,7 +76,6 @@ public class Main {
 				stickerWidthAndHeight
 		);
 		ScreenManager.showImage(s);
-		System.exit(1);
 	}
 
 	private static void printCursorPos() {
