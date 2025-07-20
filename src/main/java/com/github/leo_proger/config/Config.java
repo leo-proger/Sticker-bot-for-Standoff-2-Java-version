@@ -24,7 +24,7 @@ public class Config {
 	public static Point confirmPurchaseButton; // Координаты кнопки подтверждения покупки (полные координаты, выраженные классом Point)
 	public static Point refreshButton; // Кнопка для обновления лотов (чтобы купленные пропали)
 
-	public static int refreshLotsFrequency; // Частота обновления лотов в секундах
+	public static int refreshLotsFrequency; // Частота обновления лотов в секундах. Выставьте 0 для выключения
 	public static int delayAfterRefresh; // В миллисекундах. Нужно, чтобы избежать ложных срабатываний. Увеличьте значение, если у вас плохой интернет
 
 	public static int thresholdForColorDetection; // Порог для распознавания наклеек по цвету

@@ -43,9 +43,12 @@ public class Buyer {
 	public void run() throws InterruptedException {
 		System.out.println("Поиск лотов с наклейками...");
 
-		Thread refreshThread = new Thread(this::refreshLots);
-		refreshThread.setDaemon(true);
-		refreshThread.start();
+		if (refreshLotsFrequency != 0)
+		{
+			Thread refreshThread = new Thread(this::refreshLots);
+			refreshThread.setDaemon(true);
+			refreshThread.start();
+		}
 
 		Thread[] workerThreads = new Thread[2];
 		for (int i = 0; i < workerThreads.length; i++)
@@ -140,7 +143,7 @@ public class Buyer {
 			try
 			{
 				RobotManager.click(refreshButton.x, refreshButton.y);
-				Thread.sleep(20); // Ждем, потому что кнопка перезагрузки лотов просто не успевает среагировать на 2ой клик
+				Thread.sleep(70); // Ждем, потому что кнопка перезагрузки лотов просто не успевает среагировать на 2ой клик
 				RobotManager.click(refreshButton.x, refreshButton.y);
 				Thread.sleep(delayAfterRefresh);
 			} catch (InterruptedException e)
