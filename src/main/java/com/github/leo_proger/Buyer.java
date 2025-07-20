@@ -13,17 +13,20 @@ import static com.github.leo_proger.config.Config.*;
 public class Buyer {
 
 	private final double xMultiplier; // Коэффициент, отвечающий за нахождение наклеек по X
-
 	private final double yMultiplier = 0.3; // Коэффициент, отвечающий за нахождение наклеек по Y
 	private final double lotIndent = 5; // Отступ между лотами в пикселях
+	private final double stickerWidthAndHeightMultiplier = 0.43; // Коэффициент, отвечающий ширину и высоту наклейки
 
 	private final int lotWidth = x2 - x1; // Ширина лота в пикселях
 	private final int lotHeight = y2 - y1; // Высота лота в пикселях
-	private final int stickerWidth = 19; // Ширина наклейки в пикселях
-	private final int stickerHeight = 19; // Высота наклейки в пикселях
-	private final Lock lock = new ReentrantLock();
+	private final int stickerWidthAndHeight = getStickerWidthAndHeight(
+			lotHeight,
+			stickerWidthAndHeightMultiplier
+	); // Ширина наклейки в пикселях
+
 	private final StickerDetector stickerDetector; // Механизм обнаружения наклеек
 	private volatile boolean isRunning = true; // Для многопоточности
+	private final Lock lock = new ReentrantLock();
 
 	public Buyer(StickerDetector stickerDetector, int stickerCount) {
 		this.stickerDetector = stickerDetector;
@@ -72,8 +75,8 @@ public class Buyer {
 						BufferedImage image = ScreenManager.takeScreenshot(
 								getStickerPosByX(x1, lotWidth, xMultiplier),
 								getStickerPosByY(y1, lotHeight, yMultiplier, lotNumber, lotIndent),
-								stickerWidth,
-								stickerHeight
+								stickerWidthAndHeight,
+								stickerWidthAndHeight
 						);
 						if (stickerDetector.hasSticker(image))
 						{
