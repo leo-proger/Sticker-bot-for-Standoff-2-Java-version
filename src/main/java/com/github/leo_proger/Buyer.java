@@ -41,6 +41,8 @@ public class Buyer {
 	}
 
 	public void run() throws InterruptedException {
+		System.out.println("Поиск лотов с наклейками...");
+
 		Thread refreshThread = new Thread(this::refreshLots);
 		refreshThread.setDaemon(true);
 		refreshThread.start();

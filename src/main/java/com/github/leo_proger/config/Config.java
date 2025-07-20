@@ -30,6 +30,8 @@ public class Config {
 	public static int thresholdForColorDetection; // Порог для распознавания наклеек по цвету
 	public static int thresholdForStandardDeviation; // Порог для распознавания наклеек по среднеквадратичному отклонению
 
+	public static int stickerDetectionMethod; // Метод определения наклеек (1 - сравнение цветов, 2 - среднеквадратичное отклонение)
+
 	static
 	{
 		try
@@ -51,6 +53,8 @@ public class Config {
 
 			thresholdForColorDetection = dto.getThresholdForColorDetection();
 			thresholdForStandardDeviation = dto.getThresholdForStandardDeviation();
+
+			stickerDetectionMethod = dto.getStickerDetectionMethod();
 		} catch (IOException e)
 		{
 			throw new RuntimeException("ОШИБКА: Не удалось загрузить config.json", e);

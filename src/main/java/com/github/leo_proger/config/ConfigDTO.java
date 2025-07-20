@@ -22,6 +22,8 @@ public class ConfigDTO {
 	private int thresholdForColorDetection;
 	private int thresholdForStandardDeviation;
 
+	private int stickerDetectionMethod;
+
 	public ConfigDTO() {
 	}
 
@@ -120,6 +122,14 @@ public class ConfigDTO {
 
 	public void setThresholdForStandardDeviation(int thresholdForStandardDeviation) {
 		this.thresholdForStandardDeviation = thresholdForStandardDeviation;
+	}
+
+	public int getStickerDetectionMethod() {
+		return stickerDetectionMethod;
+	}
+
+	public void setStickerDetectionMethod(int stickerDetectionMethod) {
+		this.stickerDetectionMethod = stickerDetectionMethod;
 	}
 
 }

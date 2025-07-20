@@ -1,19 +1,20 @@
 {
-  "x1" : 0,
-  "y1" : 0,
-  "x2" : 0,
-  "y2" : 0,
-  "buyButtonX" : 1257,
+  "x1" : 2666,
+  "y1" : 311,
+  "x2" : 3512,
+  "y2" : 386,
+  "buyButtonX" : 3307,
   "confirmPurchaseButton" : {
-    "x" : 853.0,
-    "y" : 583.0
+    "x" : 2977,
+    "y" : 657
   },
   "refreshButton" : {
-    "x" : 760.0,
-    "y" : 280.0
+    "x" : 2684,
+    "y" : 282
   },
   "refreshLotsFrequency" : 10,
   "delayAfterRefresh" : 300,
   "thresholdForColorDetection" : 100,
-  "thresholdForStandardDeviation" : 700
+  "thresholdForStandardDeviation" : 700,
+  "stickerDetectionMethod" : 1
 }
