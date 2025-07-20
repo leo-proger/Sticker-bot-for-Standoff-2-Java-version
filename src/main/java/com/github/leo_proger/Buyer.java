@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static com.github.leo_proger.MathUtils.*;
 import static com.github.leo_proger.config.Config.*;
 
 
@@ -27,22 +28,12 @@ public class Buyer {
 	public Buyer(StickerDetector stickerDetector, int stickerCount) {
 		this.stickerDetector = stickerDetector;
 
-		if (stickerCount == 1)
-		{
-			xMultiplier = 0.505;
-		} else if (stickerCount == 2)
-		{
-			xMultiplier = 0;
-		} else if (stickerCount == 3)
-		{
-			xMultiplier = 0;
-		} else if (stickerCount == 4)
-		{
-			xMultiplier = 0;
-		} else
-		{
-			throw new IllegalArgumentException("ОШИБКА: Количество наклеек должно быть от 1 до 4");
-		}
+		if (stickerCount == 1) xMultiplier = 0.505;
+		else if (stickerCount == 2) xMultiplier = 0;
+		else if (stickerCount == 3) xMultiplier = 0;
+		else if (stickerCount == 4) xMultiplier = 0;
+		else throw new IllegalArgumentException("ОШИБКА: Количество наклеек должно быть от 1 до 4");
+
 	}
 
 	public void run() throws InterruptedException {
@@ -72,7 +63,6 @@ public class Buyer {
 		{
 			if (lock.tryLock())
 			{
-
 				try
 				{
 					for (int lotNumber = startLot; lotNumber < endLot; lotNumber++)
@@ -80,20 +70,19 @@ public class Buyer {
 						if (!isRunning) break;
 
 						BufferedImage image = ScreenManager.takeScreenshot(
-								(int) Math.round(x1 + lotWidth * xMultiplier),
-								(int) Math.round(
-										y1 + lotHeight * yMultiplier + lotHeight * lotNumber + lotIndent * lotNumber),
+								getStickerPosByX(x1, lotWidth, xMultiplier),
+								getStickerPosByY(y1, lotHeight, yMultiplier, lotNumber, lotIndent),
 								stickerWidth,
 								stickerHeight
 						);
 						if (stickerDetector.hasSticker(image))
 						{
-
 							try
 							{
-								int stickerPositionY = (int) Math.round(
-										y1 + (double) lotHeight / 2 + lotHeight * lotNumber + lotIndent * lotNumber);
-								buyLot(new Point(buyButtonX, stickerPositionY), confirmPurchaseButton);
+								buyLot(
+										new Point(buyButtonX, getBuyButtonByY(y1, lotHeight, lotNumber, lotIndent)),
+										confirmPurchaseButton
+								);
 							} catch (InterruptedException e)
 							{
 								Thread.currentThread().interrupt();
@@ -123,7 +112,7 @@ public class Buyer {
 
 	private void buyLot(Point buyButton, Point confirmPurchaseButton) throws InterruptedException {
 		RobotManager.click(buyButton.x, buyButton.y);
-		Thread.sleep(180);
+		Thread.sleep(180); // Ждем появления окна с подтверждением покупки
 		RobotManager.click(confirmPurchaseButton.x, confirmPurchaseButton.y);
 	}
 
@@ -145,7 +134,7 @@ public class Buyer {
 			try
 			{
 				RobotManager.click(refreshButton.x, refreshButton.y);
-				Thread.sleep(20);
+				Thread.sleep(20); // Ждем, потому что кнопка перезагрузки лотов просто не успевает среагировать на 2ой клик
 				RobotManager.click(refreshButton.x, refreshButton.y);
 				Thread.sleep(delayAfterRefresh);
 			} catch (InterruptedException e)
