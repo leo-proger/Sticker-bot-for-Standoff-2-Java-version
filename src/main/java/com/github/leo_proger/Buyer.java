@@ -1,5 +1,6 @@
 package com.github.leo_proger;
 
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.Lock;
@@ -7,131 +8,156 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static com.github.leo_proger.config.Config.*;
 
+
 public class Buyer {
 
-    private final double xMultiplier; // Коэффициент, отвечающий за нахождение наклеек по X
+	private final double xMultiplier; // Коэффициент, отвечающий за нахождение наклеек по X
 
-    private final double yMultiplier = 0.3; // Коэффициент, отвечающий за нахождение наклеек по Y
-    private final double lotIndent = 5; // Отступ между лотами в пикселях
+	private final double yMultiplier = 0.3; // Коэффициент, отвечающий за нахождение наклеек по Y
+	private final double lotIndent = 5; // Отступ между лотами в пикселях
 
-    private final int lotWidth = x2 - x1; // Ширина лота в пикселях
-    private final int lotHeight = y2 - y1; // Высота лота в пикселях
-    private final int stickerWidth = 19; // Ширина наклейки в пикселях
-    private final int stickerHeight = 19; // Высота наклейки в пикселях
+	private final int lotWidth = x2 - x1; // Ширина лота в пикселях
+	private final int lotHeight = y2 - y1; // Высота лота в пикселях
+	private final int stickerWidth = 19; // Ширина наклейки в пикселях
+	private final int stickerHeight = 19; // Высота наклейки в пикселях
+	private final Lock lock = new ReentrantLock();
+	private final StickerDetector stickerDetector; // Механизм обнаружения наклеек
+	private volatile boolean isRunning = true; // Для многопоточности
 
-    private volatile boolean isRunning = true; // Для многопоточности
-    private final Lock lock = new ReentrantLock();
+	public Buyer(StickerDetector stickerDetector, int stickerCount) {
+		this.stickerDetector = stickerDetector;
 
-    private final StickerDetector stickerDetector; // Механизм обнаружения наклеек
+		if (stickerCount == 1)
+		{
+			xMultiplier = 0.505;
+		} else if (stickerCount == 2)
+		{
+			xMultiplier = 0;
+		} else if (stickerCount == 3)
+		{
+			xMultiplier = 0;
+		} else if (stickerCount == 4)
+		{
+			xMultiplier = 0;
+		} else
+		{
+			throw new IllegalArgumentException("ОШИБКА: Количество наклеек должно быть от 1 до 4");
+		}
+	}
 
-    public Buyer(StickerDetector stickerDetector, int stickerCount) {
-        this.stickerDetector = stickerDetector;
+	public void run() throws InterruptedException {
+		Thread refreshThread = new Thread(this::refreshLots);
+		refreshThread.setDaemon(true);
+		refreshThread.start();
 
-        if (stickerCount == 1) {
-            xMultiplier = 0.505;
-        } else if (stickerCount == 2) {
-            xMultiplier = 0;
-        } else if (stickerCount == 3) {
-            xMultiplier = 0;
-        } else if (stickerCount == 4) {
-            xMultiplier = 0;
-        } else {
-            throw new IllegalArgumentException("ОШИБКА: Количество наклеек должно быть от 1 до 4");
-        }
-    }
+		Thread[] workerThreads = new Thread[2];
+		for (int i = 0; i < workerThreads.length; i++)
+		{
+			final int threadIndex = i;
+			workerThreads[i] = new Thread(() -> checkLots(threadIndex));
+			workerThreads[i].start();
+		}
 
-    public void run() throws InterruptedException {
-        Thread refreshThread = new Thread(this::refreshLots);
-        refreshThread.setDaemon(true);
-        refreshThread.start();
+		for (Thread workerThread : workerThreads)
+		{
+			workerThread.join();
+		}
+	}
 
-        Thread[] workerThreads = new Thread[2];
-        for (int i = 0; i < workerThreads.length; i++) {
-            final int threadIndex = i;
-            workerThreads[i] = new Thread(() -> checkLots(threadIndex));
-            workerThreads[i].start();
-        }
+	private void checkLots(int threadIndex) {
+		int startLot = threadIndex * 4;
+		int endLot = startLot + 4;
 
-        for (Thread workerThread : workerThreads) {
-            workerThread.join();
-        }
-    }
+		while (isRunning)
+		{
+			if (lock.tryLock())
+			{
 
-    private void checkLots(int threadIndex) {
-        int startLot = threadIndex * 4;
-        int endLot = startLot + 4;
+				try
+				{
+					for (int lotNumber = startLot; lotNumber < endLot; lotNumber++)
+					{
+						if (!isRunning) break;
 
-        while (isRunning) {
-            if (lock.tryLock()) {
+						BufferedImage image = ScreenManager.takeScreenshot(
+								(int) Math.round(x1 + lotWidth * xMultiplier),
+								(int) Math.round(
+										y1 + lotHeight * yMultiplier + lotHeight * lotNumber + lotIndent * lotNumber),
+								stickerWidth,
+								stickerHeight
+						);
+						if (stickerDetector.hasSticker(image))
+						{
 
-                try {
-                    for (int lotNumber = startLot; lotNumber < endLot; lotNumber++) {
-                        if (!isRunning) break;
+							try
+							{
+								int stickerPositionY = (int) Math.round(
+										y1 + (double) lotHeight / 2 + lotHeight * lotNumber + lotIndent * lotNumber);
+								buyLot(new Point(buyButtonX, stickerPositionY), confirmPurchaseButton);
+							} catch (InterruptedException e)
+							{
+								Thread.currentThread().interrupt();
+								System.out.println("ОШИБКА: Прерывание во время покупки лота");
+							}
+							System.out.println("Куплено!");
+							isRunning = false;
+							break;
+						}
+					}
+				} finally
+				{
+					lock.unlock();
+				}
+			}
 
-                        BufferedImage image = ScreenManager.takeScreenshot(
-                                (int) Math.round(x1 + lotWidth * xMultiplier),
-                                (int) Math.round(y1 + lotHeight * yMultiplier + lotHeight * lotNumber + lotIndent * lotNumber),
-                                stickerWidth,
-                                stickerHeight
-                        );
-                        if (stickerDetector.hasSticker(image)) {
+			try
+			{
+				Thread.sleep(10);
+			} catch (InterruptedException e)
+			{
+				Thread.currentThread().interrupt();
+				System.out.println("ОШИБКА: Прерывание во время ожидания");
+			}
+		}
+	}
 
-                            try {
-                                int stickerPositionY = (int) Math.round(y1 + (double) lotHeight / 2 + lotHeight * lotNumber + lotIndent * lotNumber);
-                                buyLot(new Point(buyButtonX, stickerPositionY), confirmPurchaseButton);
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt();
-                                System.out.println("ОШИБКА: Прерывание во время покупки лота");
-                            }
-                            System.out.println("Куплено!");
-                            isRunning = false;
-                            break;
-                        }
-                    }
-                } finally {
-                    lock.unlock();
-                }
-            }
+	private void buyLot(Point buyButton, Point confirmPurchaseButton) throws InterruptedException {
+		RobotManager.click(buyButton.x, buyButton.y);
+		Thread.sleep(180);
+		RobotManager.click(confirmPurchaseButton.x, confirmPurchaseButton.y);
+	}
 
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println("ОШИБКА: Прерывание во время ожидания");
-            }
-        }
-    }
+	private void refreshLots() {
+		while (isRunning)
+		{
+			try
+			{
+				Thread.sleep(refreshLotsFrequency * 1000L);
+			} catch (InterruptedException e)
+			{
+				Thread.currentThread().interrupt();
+				System.out.println("ОШИБКА: Прерывание во время обновления слотов");
+				break;
+			}
 
-    private void buyLot(Point buyButton, Point confirmPurchaseButton) throws InterruptedException {
-        RobotManager.click(buyButton.x, buyButton.y);
-        Thread.sleep(180);
-        RobotManager.click(confirmPurchaseButton.x, confirmPurchaseButton.y);
-    }
+			lock.lock();
 
-    private void refreshLots() {
-        while (isRunning) {
-            try {
-                Thread.sleep(refreshLotsFrequency * 1000L);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println("ОШИБКА: Прерывание во время обновления слотов");
-                break;
-            }
+			try
+			{
+				RobotManager.click(refreshButton.x, refreshButton.y);
+				Thread.sleep(20);
+				RobotManager.click(refreshButton.x, refreshButton.y);
+				Thread.sleep(delayAfterRefresh);
+			} catch (InterruptedException e)
+			{
+				Thread.currentThread().interrupt();
+				System.out.println("ОШИБКА: Прерывание во время обновления слотов");
+				break;
+			} finally
+			{
+				lock.unlock();
+			}
+		}
+	}
 
-            lock.lock();
-
-            try {
-                RobotManager.click(refreshButton.x, refreshButton.y);
-                Thread.sleep(20);
-                RobotManager.click(refreshButton.x, refreshButton.y);
-                Thread.sleep(delayAfterRefresh);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println("ОШИБКА: Прерывание во время обновления слотов");
-                break;
-            } finally {
-                lock.unlock();
-            }
-        }
-    }
 }

@@ -1,33 +1,40 @@
 package com.github.leo_proger;
 
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 
+
 public class RobotManager {
-    private static final Robot robot;
 
-    // Инициализация один раз для всего приложения
-    static {
-        try {
-            robot = new Robot();
-            robot.setAutoDelay(0);
-        } catch (AWTException e) {
-            throw new RuntimeException("Can't create Robot instance", e);
-        }
-    }
+	private static final Robot robot;
 
-    public static Robot getRobot() {
-        return robot;
-    }
+	// Инициализация один раз для всего приложения
+	static
+	{
+		try
+		{
+			robot = new Robot();
+			robot.setAutoDelay(0);
+		} catch (AWTException e)
+		{
+			throw new RuntimeException("Can't create Robot instance", e);
+		}
+	}
 
-    public static void click(int x, int y) {
-        robot.mouseMove(x, y);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-    }
+	public static Robot getRobot() {
+		return robot;
+	}
 
-    public static BufferedImage screenshot(int x, int y, int width, int height) {
-        return robot.createScreenCapture(new Rectangle(x, y, width, height));
-    }
+	public static void click(int x, int y) {
+		robot.mouseMove(x, y);
+		robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+		robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+	}
+
+	public static BufferedImage screenshot(int x, int y, int width, int height) {
+		return robot.createScreenCapture(new Rectangle(x, y, width, height));
+	}
+
 }
