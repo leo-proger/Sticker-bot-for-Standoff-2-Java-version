@@ -14,11 +14,12 @@ public class Buyer {
 
 	private final double xMultiplier; // Коэффициент, отвечающий за нахождение наклеек по X
 	private final double yMultiplier = 0.3; // Коэффициент, отвечающий за нахождение наклеек по Y
-	private final double lotIndent = 5; // Отступ между лотами в пикселях
+	private final double lotIndentMultiplier = 0.08; // Коэффициент, отвечающий за отступ между лотами
 	private final double stickerWidthAndHeightMultiplier = 0.43; // Коэффициент, отвечающий ширину и высоту наклейки
 
 	private final int lotWidth = x2 - x1; // Ширина лота в пикселях
 	private final int lotHeight = y2 - y1; // Высота лота в пикселях
+	private final int lotIndent = getLotIndent(lotHeight, lotIndentMultiplier); // Отступ между лотами в пикселях
 	private final int stickerWidthAndHeight = getStickerWidthAndHeight(
 			lotHeight,
 			stickerWidthAndHeightMultiplier

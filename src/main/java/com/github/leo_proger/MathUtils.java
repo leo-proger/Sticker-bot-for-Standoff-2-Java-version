@@ -20,4 +20,8 @@ public class MathUtils {
 		return Math.toIntExact(Math.round(lotHeight * stickerWidthAndHeightMultiplier));
 	}
 
+	public static int getLotIndent(int lotHeight, double lotIndentMultiplier) {
+		return Math.toIntExact(Math.round(lotHeight * lotIndentMultiplier));
+	}
+
 }
