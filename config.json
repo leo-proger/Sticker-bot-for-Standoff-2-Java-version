@@ -1,16 +1,16 @@
 {
-  "x1" : 2666,
-  "y1" : 311,
-  "x2" : 3512,
-  "y2" : 386,
-  "buyButtonX" : 3307,
+  "x1" : 0,
+  "y1" : 0,
+  "x2" : 0,
+  "y2" : 0,
+  "buyButtonX" : 0,
   "confirmPurchaseButton" : {
-    "x" : 2977,
-    "y" : 657
+    "x" : 0,
+    "y" : 0
   },
   "refreshButton" : {
-    "x" : 2684,
-    "y" : 282
+    "x" : 0,
+    "y" : 0
   },
   "refreshLotsFrequency" : 10,
   "delayAfterRefresh" : 300,
