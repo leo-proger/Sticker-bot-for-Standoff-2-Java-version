@@ -3,13 +3,17 @@ package com.github.leo_proger;
 
 import com.github.leo_proger.config.ConfiguringType;
 import com.github.leo_proger.config.CoordsConfigurer;
+import com.github.leo_proger.detection.ColorDetection;
+import com.github.leo_proger.detection.StandardDeviation;
+import com.github.leo_proger.detection.StickerDetector;
+import com.github.leo_proger.ui.ScreenManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Scanner;
 
-import static com.github.leo_proger.MathUtils.*;
-import static com.github.leo_proger.ScreenManager.getCursorPosition;
+import static com.github.leo_proger.utils.MathUtils.*;
+import static com.github.leo_proger.ui.ScreenManager.getCursorPosition;
 import static com.github.leo_proger.config.Config.*;
 
 

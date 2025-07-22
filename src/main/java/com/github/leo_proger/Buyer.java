@@ -1,12 +1,16 @@
 package com.github.leo_proger;
 
 
+import com.github.leo_proger.detection.StickerDetector;
+import com.github.leo_proger.ui.RobotManager;
+import com.github.leo_proger.ui.ScreenManager;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static com.github.leo_proger.MathUtils.*;
+import static com.github.leo_proger.utils.MathUtils.*;
 import static com.github.leo_proger.config.Config.*;
 
 

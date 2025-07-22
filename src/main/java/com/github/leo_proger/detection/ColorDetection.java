@@ -1,4 +1,4 @@
-package com.github.leo_proger;
+package com.github.leo_proger.detection;
 
 
 import java.awt.*;
