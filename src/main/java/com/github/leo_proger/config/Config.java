@@ -61,20 +61,26 @@ public class Config {
 		}
 	}
 
+	public static Path getConfigPath() {
+		return Path.of(System.getProperty("user.dir"), "config.json");
+	}
+
+	public static boolean configExists(Path configPath) {
+		return Files.exists(configPath);
+	}
+
 	public static ConfigDTO loadDataFromJson() throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		Path json = getConfigPath();
-		if (!Files.exists(json))
+		if (!configExists(json))
 		{
-			throw new FileNotFoundException("ОШИБКА: Файл с настройками не найден. Попробуйте откалибровать координаты");
+			System.out.println("Файл с настройками не найден. Создается файл по умолчанию");
+			Files.createFile(json);
+			saveDataToJson(getDefaultSettings());
 		}
 
 		return mapper.readValue(json.toFile(), ConfigDTO.class);
-	}
-
-	public static Path getConfigPath() {
-		return Path.of(System.getProperty("user.dir"), "config.json");
 	}
 
 	public static void saveDataToJson(ConfigDTO configDTO) {
@@ -89,6 +95,10 @@ public class Config {
 		{
 			throw new RuntimeException("ОШИБКА: Не удалось сохранить данные", e);
 		}
+	}
+
+	public static ConfigDTO getDefaultSettings() {
+		return new ConfigDTO(0, 0, 0, 0, 0, new Point(), new Point(), 10, 300, 100, 700, 1);
 	}
 
 }

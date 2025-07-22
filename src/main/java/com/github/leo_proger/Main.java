@@ -1,9 +1,11 @@
 package com.github.leo_proger;
 
 
+import com.github.leo_proger.config.ConfiguringType;
+import com.github.leo_proger.config.CoordsConfigurer;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Scanner;
 
 import static com.github.leo_proger.MathUtils.*;
@@ -13,34 +15,79 @@ import static com.github.leo_proger.config.Config.*;
 
 public class Main {
 
-	public static void main(String[] args) throws InterruptedException, IOException {
-		Scanner sc = new Scanner(System.in);
+	private static final Scanner sc = new Scanner(System.in);
+
+	public static void main(String[] args) throws Exception {
+		int selectNumber = showMainMenu();
+
+		switch (selectNumber)
+		{
+			case 1 -> runStickerCatching();
+			case 3 -> calibration();
+			default -> System.out.println("ОШИБКА: Неизвестная опция");
+		}
+
+		sc.nextLine();
+	}
+
+	private static int showMainMenu() {
 		System.out.println("Выберите цифру:");
 		System.out.println("1. Ловить наклейки");
 		// System.out.println("2. Посмотреть область определения наклеек");
-		// System.out.println("3. Откалибровать координаты");
+		System.out.println("3. Откалибровать координаты");
 		System.out.print(">>> ");
-		int selectNumber = sc.nextInt();
+		return sc.nextInt();
+	}
 
-		if (selectNumber == 1)
+	private static void runStickerCatching() throws InterruptedException {
+		System.out.println("Введите количество наклеек (от 1 до 4):");
+		System.out.print(">>> ");
+		int stickerNumber = sc.nextInt();
+
+		StickerDetector stickerDetector = createStickerDetector();
+		Buyer buyer = new Buyer(stickerDetector, stickerNumber);
+		buyer.run();
+	}
+
+	private static StickerDetector createStickerDetector() {
+		if (stickerDetectionMethod == 1)
 		{
-			System.out.println("Введите количество наклеек (от 1 до 4):");
-			System.out.print(">>> ");
-			int stickerNumber = sc.nextInt();
-
-			if (stickerDetectionMethod == 1)
-			{
-				StickerDetector stickerDetector = new ColorDetection(thresholdForColorDetection);
-				Buyer buyer = new Buyer(stickerDetector, stickerNumber);
-				buyer.run();
-			} else if (stickerDetectionMethod == 2)
-			{
-				StickerDetector stickerDetector = new StandardDeviation(thresholdForStandardDeviation);
-				Buyer buyer = new Buyer(stickerDetector, stickerNumber);
-				buyer.run();
-			}
+			return new ColorDetection(thresholdForColorDetection);
+		} else if (stickerDetectionMethod == 2)
+		{
+			return new StandardDeviation(thresholdForStandardDeviation);
+		} else
+		{
+			throw new IllegalArgumentException("ОШИБКА: Неверный метод определения наклеек");
 		}
-		System.in.read();
+	}
+
+	private static void calibration() throws Exception {
+		System.out.println("Выберите компонент для настройки:");
+		System.out.println("1. Размер лота (нужно в принципе для ловли наклеек)");
+		System.out.println("2. Кнопка покупки лота");
+		System.out.println("3. Кнопка подтверждения покупки");
+		System.out.println("4. Кнопка обновления лотов (чекбокс \"Только мои запросы\")");
+		System.out.print(">>> ");
+
+		int setting = sc.nextInt();
+
+		switch (setting)
+		{
+			case 1 -> new CoordsConfigurer(ConfiguringType.LOT_SIZE).configure();
+			case 2 -> new CoordsConfigurer(ConfiguringType.BUY_BUTTON_X).configure();
+			case 3 -> new CoordsConfigurer(ConfiguringType.CONFIRM_PURCHASE_BUTTON).configure();
+			case 4 -> new CoordsConfigurer(ConfiguringType.REFRESH_BUTTON).configure();
+			default -> System.out.println("ОШИБКА: Неверная опция");
+		}
+		System.out.println("Еще что-нибудь настроить?");
+		System.out.println("1. Да, продолжить настройку");
+		System.out.println("2. Нет, выйти");
+		System.out.print(">>> ");
+
+		int toContinue = sc.nextInt();
+		if (toContinue == 1) calibration();
+		else if (toContinue == 2) CoordsConfigurer.finishSettingUp();
 	}
 
 	private static void checkDetection(StickerDetector stickerDetector) {

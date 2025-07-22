@@ -27,13 +27,40 @@ public class ConfigDTO {
 	public ConfigDTO() {
 	}
 
-	public ConfigDTO(int x1, int y1, int x2, int y2, int buyButtonX, Point confirmPurchaseButton) {
+	public ConfigDTO(
+			int x1,
+			int y1,
+			int x2,
+			int y2,
+			int buyButtonX,
+			Point confirmPurchaseButton,
+			Point refreshButton,
+			int refreshLotsFrequency,
+			int delayAfterRefresh,
+			int thresholdForColorDetection,
+			int thresholdForStandardDeviation,
+			int stickerDetectionMethod
+	) {
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
 		this.y2 = y2;
 		this.buyButtonX = buyButtonX;
 		this.confirmPurchaseButton = confirmPurchaseButton;
+		this.refreshButton = refreshButton;
+		this.refreshLotsFrequency = refreshLotsFrequency;
+		this.delayAfterRefresh = delayAfterRefresh;
+		this.thresholdForColorDetection = thresholdForColorDetection;
+		this.thresholdForStandardDeviation = thresholdForStandardDeviation;
+		this.stickerDetectionMethod = stickerDetectionMethod;
+	}
+
+	public void setLotSize(Point upperLeftCorner, Point lowerRightCorner) {
+		this.x1 = upperLeftCorner.x;
+		this.y1 = upperLeftCorner.y;
+
+		this.x2 = lowerRightCorner.x;
+		this.y2 = lowerRightCorner.y;
 	}
 
 	public int getX1() {
