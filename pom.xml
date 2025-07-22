@@ -52,8 +52,40 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>console</headerType>
+                            <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+                            <outfile>C:/Users/MONSTER/Downloads/sticker_bot.exe</outfile>
+                            <classPath>
+                                <mainClass>com.github.leo_proger.Main</mainClass>
+                            </classPath>
+                            <singleInstance>
+                                <mutexName>sticker_bot_mutex</mutexName>
+                            </singleInstance>
+                            <jre>
+                                <minVersion>21</minVersion>
+                                <maxVersion>25</maxVersion>
+                                <opts>
+                                    <opt>-Dfile.encoding=UTF-8</opt>
+                                    <opt>-Djava.awt.headless=false</opt>
+                                </opts>
+                            </jre>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
 
 </project>

@@ -10,7 +10,7 @@ import com.github.leo_proger.ui.ScreenManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static com.github.leo_proger.config.Config.*;
@@ -20,7 +20,7 @@ import static com.github.leo_proger.utils.MathUtils.*;
 
 public class Main {
 
-	private static final Scanner sc = new Scanner(System.in);
+	private static final Scanner sc = new Scanner(System.in, StandardCharsets.UTF_8);
 
 	public static void main(String[] args) throws Exception {
 		int selectNumber = showMainMenu();
