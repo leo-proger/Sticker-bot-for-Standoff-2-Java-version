@@ -68,16 +68,10 @@ public class CoordsConfigurer implements NativeMouseListener {
 	}
 
 	private void focusOnApp() throws IOException, URISyntaxException {
-		URL url = CoordsConfigurer.class.getClassLoader().getResource("com/github/leo_proger/focusOnWindow.vbs");
-		if (url == null)
-		{
-			throw new IllegalStateException("ОШИБКА: Файл из ресурсов не найден");
-		}
-		Path scriptFile = Path.of(url.toURI());
-		String scriptPath = scriptFile.toAbsolutePath().toString();
+		Path scriptPath = Path.of(System.getProperty("user.dir"), "resources", "focusOnWindow.vbs").toAbsolutePath();
 
 		Runtime.getRuntime().exec(new String[]{
-				"wscript.exe", scriptPath
+				"wscript.exe", scriptPath.toString()
 		});
 	}
 
