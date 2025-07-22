@@ -10,11 +10,12 @@ import com.github.leo_proger.ui.ScreenManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.Scanner;
 
-import static com.github.leo_proger.utils.MathUtils.*;
-import static com.github.leo_proger.ui.ScreenManager.getCursorPosition;
 import static com.github.leo_proger.config.Config.*;
+import static com.github.leo_proger.ui.ScreenManager.getCursorPosition;
+import static com.github.leo_proger.utils.MathUtils.*;
 
 
 public class Main {
@@ -27,18 +28,19 @@ public class Main {
 		switch (selectNumber)
 		{
 			case 1 -> runStickerCatching();
-			case 3 -> calibration();
+			case 2 -> calibration();
+			case 3 -> checkStickerPosition();
 			default -> System.out.println("ОШИБКА: Неизвестная опция");
 		}
 
-		sc.nextLine();
+		System.in.read();
 	}
 
 	private static int showMainMenu() {
 		System.out.println("Выберите цифру:");
 		System.out.println("1. Ловить наклейки");
-		// System.out.println("2. Посмотреть область определения наклеек");
-		System.out.println("3. Откалибровать координаты");
+		System.out.println("2. Настроить координаты");
+		System.out.println("3. Посмотреть, как настроились координаты");
 		System.out.print(">>> ");
 		return sc.nextInt();
 	}
@@ -64,6 +66,19 @@ public class Main {
 		{
 			throw new IllegalArgumentException("ОШИБКА: Неверный метод определения наклеек");
 		}
+	}
+
+	private static void checkStickerPosition() {
+		sc.nextLine();
+
+		System.out.print("Введите через пробел количество наклеек и номер лота, которые хотите проверить >>> ");
+
+		String[] data = sc.nextLine().split(" ");
+
+		int stickerNumber = Integer.parseInt(data[0]);
+		int lotNumber = Integer.parseInt(data[1]);
+
+		showSticker(stickerNumber, lotNumber - 1);
 	}
 
 	private static void calibration() throws Exception {
@@ -94,6 +109,34 @@ public class Main {
 		else if (toContinue == 2) CoordsConfigurer.finishSettingUp();
 	}
 
+	private static void showSticker(int stickerNumber, int lotNumber) {
+		// int x1 = 2667, y1 = 312;
+		// int x2 = 3512, y2 = 386;
+
+		int lotHeight = y2 - y1;
+		int lotWidth = x2 - x1;
+		int lotIndent = getLotIndent(lotHeight, 0.08);
+
+		int stickerWidthAndHeight = getStickerWidthAndHeight(lotHeight, 0.43);
+
+		double xMultiplier = 0;
+		switch (stickerNumber)
+		{
+			case 1 -> xMultiplier = 0.505;
+			case 2 -> xMultiplier = 0.465;
+			case 3 -> xMultiplier = 0.423;
+			case 4 -> xMultiplier = 0.382;
+		}
+
+		BufferedImage s = ScreenManager.takeScreenshot(
+				getStickerPosByX(x1, lotWidth, xMultiplier),
+				getStickerPosByY(y1, lotHeight, 0.3, lotNumber, lotIndent),
+				stickerWidthAndHeight,
+				stickerWidthAndHeight
+		);
+		ScreenManager.showImage(s);
+	}
+
 	private static void checkDetection(StickerDetector stickerDetector) {
 		for (int i = 0; i < 8; i++)
 		{
@@ -107,26 +150,6 @@ public class Main {
 			stickerDetector.hasSticker(s);
 		}
 		System.exit(1);
-	}
-
-	private static void showImage() {
-		int x1 = 2667, y1 = 312;
-		int x2 = 3512, y2 = 386;
-
-		int lotNumber = 2;
-		int lotHeight = y2 - y1;
-		int lotWidth = x2 - x1;
-		int lotIndent = getLotIndent(lotHeight, 0.08);
-
-		int stickerWidthAndHeight = getStickerWidthAndHeight(lotHeight, 0.43);
-
-		BufferedImage s = ScreenManager.takeScreenshot(
-				getStickerPosByX(x1, lotWidth, 0.505),
-				getStickerPosByY(y1, lotHeight, 0.3, lotNumber, lotIndent),
-				stickerWidthAndHeight,
-				stickerWidthAndHeight
-		);
-		ScreenManager.showImage(s);
 	}
 
 	private static void printCursorPos() {
