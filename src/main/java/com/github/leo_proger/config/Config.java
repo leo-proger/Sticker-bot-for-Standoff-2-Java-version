@@ -74,7 +74,6 @@ public class Config {
 		Path json = getConfigPath();
 		if (!configExists(json))
 		{
-			System.out.println("Файл с настройками не найден. Создается файл по умолчанию");
 			Files.createFile(json);
 			saveDataToJson(getDefaultSettings());
 		}
