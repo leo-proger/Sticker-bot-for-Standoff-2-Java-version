@@ -66,7 +66,7 @@
                         <configuration>
                             <headerType>console</headerType>
                             <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
-                            <outfile>C:/Users/MONSTER/Downloads/Sticker_Bot/sticker_bot.exe</outfile>
+                            <outfile>C:/Users/MONSTER/Downloads/sticker_bot/sticker_bot.exe</outfile>
                             <classPath>
                                 <mainClass>com.github.leo_proger.Main</mainClass>
                             </classPath>
