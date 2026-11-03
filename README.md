@@ -1,5 +1,7 @@
 # Sticker bot for Standoff 2 Java version
 
+🔥 Там скоро дропну новый скрипт 👉 [тгшка](https://t.me/mozzi_standik) 🔥
+
 Может потом сделаю норм инструкцию.
 
 Программа написана на Java 21.
